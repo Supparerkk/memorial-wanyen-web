@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 // --- Helper Functions ---
-const getOptimizedUrl = (url, type = "thumbnail") => {
+const getOptimizedUrl = (url: string, type: string = "thumbnail"): string => {
   if (!url) return "";
 
   // 1. กรณีรูปจาก Unsplash
@@ -37,13 +37,13 @@ const getOptimizedUrl = (url, type = "thumbnail") => {
 };
 
 const generateCameraSequence = (
-  baseUrl,
-  count,
-  prefix = "",
-  startNum = 1,
-  padding = 3,
-  extension = "jpg"
-) => {
+  baseUrl: string,
+  count: number,
+  prefix: string = "",
+  startNum: number = 1,
+  padding: number = 3,
+  extension: string = "jpg"
+): string[] => {
   const cleanBaseUrl = baseUrl.replace(/\/$/, "");
   return Array.from({ length: count }, (_, i) => {
     const currentNum = startNum + i;
@@ -53,7 +53,7 @@ const generateCameraSequence = (
 };
 
 // --- Components กราฟิกและลายไทย ---
-const ThaiTopBorder = ({ className }) => (
+const ThaiTopBorder = ({ className }: { className?: string }) => (
   <div
     className={`w-full overflow-hidden leading-[0] bg-[#1a1a1a] ${className}`}
   >
@@ -138,7 +138,7 @@ const ThaiTopBorder = ({ className }) => (
   </div>
 );
 
-const LotusIcon = ({ className }) => (
+const LotusIcon = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 100 100"
     className={className}
@@ -171,7 +171,15 @@ const EVENT_DATA = {
     "ขอกราบขอบพระคุณแขกผู้มีเกียรติทุกท่าน ที่มาร่วมไว้อาลัยและส่งดวงวิญญาณสู่สุคติ\nในวาระสุดท้ายนี้ ความเมตตาของท่านจะสถิตในใจเราตลอดไป",
 };
 
-const DAYS_DATA = [
+interface DayData {
+  id: number;
+  label: string;
+  date: string;
+  driveLink: string;
+  images: string[];
+}
+
+const DAYS_DATA: DayData[] = [
   {
     id: 1,
     label: "วันที่ ๒๕",
@@ -224,9 +232,11 @@ const DAYS_DATA = [
 ];
 
 export default function App() {
-  const [activeDayId, setActiveDayId] = useState(1);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeDayId, setActiveDayId] = useState<number>(1);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -236,31 +246,34 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const activeData = DAYS_DATA.find((d) => d.id === activeDayId);
+  const activeData = DAYS_DATA.find((d) => d.id === activeDayId)!;
 
   const handleNext = useCallback(
-    (e) => {
+    (e?: React.MouseEvent) => {
       e?.stopPropagation();
       if (selectedImageIndex === null) return;
-      setSelectedImageIndex((prev) => (prev + 1) % activeData.images.length);
+      setSelectedImageIndex((prev) =>
+        prev !== null ? (prev + 1) % activeData.images.length : 0
+      );
     },
     [selectedImageIndex, activeData.images.length]
   );
 
   const handlePrev = useCallback(
-    (e) => {
+    (e?: React.MouseEvent) => {
       e?.stopPropagation();
       if (selectedImageIndex === null) return;
-      setSelectedImageIndex(
-        (prev) =>
-          (prev - 1 + activeData.images.length) % activeData.images.length
+      setSelectedImageIndex((prev) =>
+        prev !== null
+          ? (prev - 1 + activeData.images.length) % activeData.images.length
+          : 0
       );
     },
     [selectedImageIndex, activeData.images.length]
   );
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedImageIndex === null) return;
       if (e.key === "ArrowRight") handleNext();
       if (e.key === "ArrowLeft") handlePrev();
@@ -270,7 +283,7 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImageIndex, handleNext, handlePrev]);
 
-  const handleDownload = async (url) => {
+  const handleDownload = async (url: string) => {
     try {
       const fullUrl = getOptimizedUrl(url, "full");
       const response = await fetch(fullUrl);
@@ -305,6 +318,7 @@ export default function App() {
                     h1, h2, h3, .thai-header {
                         font-family: 'Chonburi', serif;
                     }
+
 
                     .fade-in { animation: fadeIn 1s ease-out; }
                     @keyframes fadeIn {
@@ -413,9 +427,10 @@ export default function App() {
                   alt={`Memory ${idx + 1}`}
                   className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100 grayscale-[50%] group-hover:grayscale-0"
                   loading="lazy"
-                  decoding="async"
                   onError={(e) => {
-                    e.target.closest(".group").style.display = "none";
+                    (e.target as HTMLImageElement).closest(
+                      ".group"
+                    )!.style.display = "none";
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
@@ -485,16 +500,16 @@ export default function App() {
 
           <button
             onClick={handlePrev}
-            className="absolute left-2 md:left-8 z-50 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-md border border-white/20 shadow-lg"
+            className="absolute left-2 md:left-8 z-50 p-4 rounded-full bg-black/40 hover:bg-black/60 text-white/90 hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-sm border border-white/10 hidden md:block"
           >
-            <ChevronLeft size={40} strokeWidth={3} />
+            <ChevronLeft size={56} strokeWidth={2} />
           </button>
 
           <button
             onClick={handleNext}
-            className="absolute right-2 md:right-8 z-50 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-md border border-white/20 shadow-lg"
+            className="absolute right-2 md:right-8 z-50 p-4 rounded-full bg-black/40 hover:bg-black/60 text-white/90 hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-sm border border-white/10 hidden md:block"
           >
-            <ChevronRight size={40} strokeWidth={3} />
+            <ChevronRight size={56} strokeWidth={2} />
           </button>
 
           <div
