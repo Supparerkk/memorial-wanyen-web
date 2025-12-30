@@ -495,16 +495,24 @@ export default function App() {
 
           <button
             onClick={handlePrev}
-            className="absolute left-2 md:left-8 z-50 p-4 rounded-full bg-black/40 hover:bg-black/60 text-white/90 hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-sm border border-white/10 hidden md:block"
+            className="absolute left-2 md:left-8 z-50 p-3 md:p-4 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-sm border border-white/10"
           >
-            <ChevronLeft size={56} strokeWidth={2} />
+            <ChevronLeft
+              size={32}
+              strokeWidth={2}
+              className="md:w-14 md:h-14"
+            />
           </button>
 
           <button
             onClick={handleNext}
-            className="absolute right-2 md:right-8 z-50 p-4 rounded-full bg-black/40 hover:bg-black/60 text-white/90 hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-sm border border-white/10 hidden md:block"
+            className="absolute right-2 md:right-8 z-50 p-3 md:p-4 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-[#c5a059] transition-all hover:scale-110 backdrop-blur-sm border border-white/10"
           >
-            <ChevronRight size={56} strokeWidth={2} />
+            <ChevronRight
+              size={32}
+              strokeWidth={2}
+              className="md:w-14 md:h-14"
+            />
           </button>
 
           <div
