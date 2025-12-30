@@ -188,7 +188,7 @@ const DAYS_DATA: DayData[] = [
     images: [
       ...generateCameraSequence(
         "https://raw.githubusercontent.com/Supparerkk/memorial-photos-wanyen/main/day-25-wanyen",
-        50,
+        32,
         "",
         1,
         3,
@@ -204,7 +204,7 @@ const DAYS_DATA: DayData[] = [
     images: [
       ...generateCameraSequence(
         "https://raw.githubusercontent.com/Supparerkk/memorial-photos-wanyen/main/day-26-wanyen",
-        100,
+        39,
         "",
         1,
         3,
